@@ -2,13 +2,24 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 
 public class Main {
-    public static int testInt;
     public static int yearInt;
     public static int monthInt;
     public static int dayInt;
     public static String sign = "";
+    public static LocalDate dateNow = LocalDate.now();
+    public static Period userAge;
+    public static LocalDate inpDate;
+    public static LocalDate nextBirthday;
+    public static  boolean isBefore;
+    public static long birthdayPeriod;
+//    public static int monthNow = dateNow.getMonthValue();
+//    public static int dayNow = dateNow.getDayOfMonth();
 
     public static void main(String[] args) {
 
@@ -173,12 +184,12 @@ public class Main {
         btnFind.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // patikrinu vartotojo ivestus duomenis ir konvertuoju i integer
-
                 try {
-                    //testInt = Integer.parseInt(inpBox1.getText() + inpBox2.getText() + inpBox3.getText());
                     yearInt = Integer.parseInt(inpBox1.getText());
                     monthInt = Integer.parseInt(inpBox2.getText());
                     dayInt = Integer.parseInt(inpBox3.getText());
+
+                    // laukelio remeli nuspalvinu pilkai, tam, kad jeigu pries tai jis butu buves raudonas
                     inpBox1.setBorder(borderGray);
                     inpBox2.setBorder(borderGray);
                     inpBox3.setBorder(borderGray);
@@ -191,6 +202,18 @@ public class Main {
                     labelBodyUp.setForeground(Color.RED);
                     labelBodyUp.setText("Blogai ivesti duomenys!");
                 }
+                    // vartotojo ivestus duomenis konvertuoju i localDate formata
+                    inpDate = LocalDate.of(yearInt, monthInt, dayInt);
+                    // issiaiskinu vartotojo amziu
+                    userAge = Period.between(inpDate, dateNow);
+                    // issiaiskinu kada bus sekantis gimtadienis
+                    nextBirthday = inpDate.withYear(dateNow.getYear());
+                    if (isBefore = nextBirthday.isBefore(dateNow)){
+                        nextBirthday = nextBirthday.plusYears(1);
+                    }
+                    birthdayPeriod = ChronoUnit.DAYS.between(dateNow, nextBirthday);
+
+
 
 
                 //#region horoskopo datu logika
@@ -260,7 +283,9 @@ public class Main {
                 //#endregion
 
                 labelBodyCenter.setText("<html>" + sign + "<br>" +
-                        "Dabartinis amžius yra " + "metai." + "</html>");
+                        "Jūsų amžius " + userAge.getYears() + " metai.<br>" +
+                        "Iki gimtadienio liko " + birthdayPeriod + " dienos.<br>" +
+                        "Kai gimėte, buvo " + inpDate.getDayOfWeek() + "." + "</html>");
 
                 //#region nurodau koki teksta atvaizduoti priklausomai nuo zenklo
                 if (sign == "Avinas") {
